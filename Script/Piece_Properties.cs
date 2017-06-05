@@ -2,31 +2,37 @@
 using System.Collections;
 
 public class Piece_Properties : MonoBehaviour {
+	private Global_Variable globalScript;
+
 	public enum resizePatternX {RIGHT, LEFT, CENTER};
 	public enum resizePatternY {UP, DOWN, CENTER};
 	public resizePatternX xPositionPattern;
 	public resizePatternY yPositionPattern;
 
+	private Vector2 smallDimension;
+	private Vector2 bigDimension;
+	private Vector2 placeHolderPosition;
 	private RectTransform image;
-	public Vector2 smallImagePosition;
-	public Vector2 smallImageDimension;
-	public Vector2 smallDimension;
-	public Vector2 bigImagePosition;
-	public Vector2 bigImageDimension;
-	public Vector2 bigDimension;
+	private Vector2 smallImagePosition;
+	private Vector2 smallImageDimension;
+	private Vector2 bigImagePosition;
+	private Vector2 bigImageDimension;
 	private Vector2 scale;
 
-	public bool isDrag;
+	private bool isDrag;
+	private bool isCompleted;
 
 	void Start () {
+		isCompleted = false;
 		image = this.transform.Find ("Image").GetComponent<RectTransform> ();
-		string level = GameObject.Find ("Canvas").GetComponent<Global_Variable> ().getLevel ();
+		globalScript = GameObject.Find ("Canvas").GetComponent<Global_Variable> ();
+		string level = globalScript.getLevel ();
 		if (Equals (level, "ts")) {
 			scale = new Vector2(0.5f ,0.5f);
 		}
-		Debug.Log (scale);
 		bigDimension = this.GetComponent<RectTransform> ().sizeDelta;
 		smallDimension = Vector2.Scale(bigDimension,scale);
+		placeHolderPosition = this.GetComponent<RectTransform> ().localPosition;
 		bigImageDimension = image.sizeDelta;
 		smallImageDimension = Vector2.Scale(bigImageDimension,scale);
 		bigImagePosition = image.localPosition;
@@ -72,16 +78,29 @@ public class Piece_Properties : MonoBehaviour {
 
 
 	public void drag(){
-		this.GetComponent<RectTransform> ().position = Input.mousePosition;
-		this.GetComponent<RectTransform> ().sizeDelta = bigDimension;
-		image.sizeDelta = bigImageDimension;
-		image.localPosition = bigImagePosition;
-		isDrag = true;
+		if (globalScript.getWaitingStatus() == true && isCompleted == false) {
+			this.GetComponent<RectTransform> ().position = Input.mousePosition;
+			this.GetComponent<RectTransform> ().sizeDelta = bigDimension;
+			this.GetComponent<RectTransform> ().SetAsLastSibling();
+			image.sizeDelta = bigImageDimension;
+			image.localPosition = bigImagePosition;
+			isDrag = true;
+		}
 	}
 
 	public void drop(){
-		toSmall ();
-		isDrag = false;
+		if (globalScript.getWaitingStatus () == true && isCompleted == false) {
+			float distance = Vector2.Distance (this.GetComponent<RectTransform> ().localPosition, placeHolderPosition);
+			if (distance < 50) {
+				this.GetComponent<RectTransform> ().localPosition = placeHolderPosition;
+				isCompleted = true;
+				globalScript.addPieceCompleted ();
+			} else {
+				toSmall ();
+				isDrag = false;
+			}
+
+		}
 	}
 
 	public bool getDrag(){
