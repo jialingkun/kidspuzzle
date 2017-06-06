@@ -13,6 +13,7 @@ public class Global_Variable : MonoBehaviour {
 
 	private string stageID;
 	private string level;
+	private int levelID;
 	private int stageNum;
 	private AudioSource audioSource;
 	private GameObject selectedTemplate;
@@ -70,7 +71,8 @@ public class Global_Variable : MonoBehaviour {
 		RectTransform tempTargetPos;
 		int swapIndex;
 		if (Equals (level, "ts")) {
-			
+			pieceCount = 4;
+			levelID = 1;
 			pieceArrived = new bool[4];
 			for (int i = 0; i < 4; i++) {
 				pieceArrived [i] = false;
@@ -107,13 +109,8 @@ public class Global_Variable : MonoBehaviour {
 
 	void Update(){
 		if (waiting == false) {
-			if (Equals (level, "ts")) {
-				pieceCount = 4;
-
-			}
 			for (int i = 0; i < pieceCount; i++) {
-				
-				if (Vector2.Distance (piecePos [i].position, pieceTargetPos [i].position) == 0 && pieceArrived [i] == false) {
+				if (Vector2.Distance (piecePos [i].position, pieceTargetPos [i].position) < 0.5f && pieceArrived [i] == false) {
 					pieceArrived [i] = true;
 					countArrived++;
 				} else if(pieceObject[i].GetComponent<Piece_Properties>().getDrag() == false) {
@@ -131,7 +128,8 @@ public class Global_Variable : MonoBehaviour {
 
 			}
 
-			if (pieceCompleted >= pieceCount && isWin==false) {
+			if (pieceCompleted >= pieceCount && isWin==false) { //you win
+				SaveLoad.Save(levelID,stageNum);
 				nextButton.SetActive (true);
 				nameImage.SetActive (true);
 				soundTrigger.SetActive (true);
@@ -156,7 +154,6 @@ public class Global_Variable : MonoBehaviour {
 
 	public void addPieceCompleted(){
 		pieceCompleted++;
-		Debug.Log (pieceCompleted);
 	}
 
 	public void clickHome(){

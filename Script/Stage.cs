@@ -1,24 +1,67 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class Click_Stage : MonoBehaviour {
+public class Stage : MonoBehaviour {
+	public int unlockLevel2Condition;
+	public int unlockLevel3Condition;
+	public Sprite lockImage;
 	private GameObject levelButton;
 	private GameObject backButton;
 	private GameObject stageToodler;
 	private GameObject stagePreschool;
 	private GameObject stageKindergarten;
+	private GameObject buttonPreschool;
+	private GameObject buttonKindergarten;
+
+	private bool preschoolLock;
+	private bool KindergartenLock;
+	private int countLevel1Complete;
+	private int countLevel2Complete;
 	// Use this for initialization
 	void Start () {
+		preschoolLock = true;
+		KindergartenLock = true;
+		countLevel1Complete = 0;
+		countLevel2Complete = 0;
+
 		levelButton = GameObject.Find ("Level");
 		backButton = GameObject.Find ("Back");
 		stageToodler = GameObject.Find ("StageToodler");
 		stagePreschool = GameObject.Find ("StagePreschool");
 		stageKindergarten = GameObject.Find ("StageKindergarten");
+		buttonPreschool = GameObject.Find ("Preschool");
+		buttonKindergarten = GameObject.Find ("Kindergarten");
 		stageToodler.SetActive (false);
 		stagePreschool.SetActive (false);
 		stageKindergarten.SetActive (false);
 		backButton.SetActive (false);
+
+		SaveLoad.Load ();
+
+		foreach (StageData data in SaveLoad.savedLevel1) {
+			Debug.Log ("data:" + data.completed);
+			if (data.completed == true) {
+				countLevel1Complete++;
+			}
+		}
+
+		foreach (StageData data in SaveLoad.savedLevel2) {
+			if (data.completed == true) {
+				countLevel2Complete++;
+			}
+		}
+
+		if (countLevel1Complete<unlockLevel2Condition) {
+			buttonPreschool.GetComponent<Image> ().sprite = lockImage;
+			buttonPreschool.GetComponent<Button> ().enabled = false;
+		}
+		if (countLevel2Complete<unlockLevel3Condition) {
+			buttonKindergarten.GetComponent<Image> ().sprite = lockImage;
+			buttonKindergarten.GetComponent<Button> ().enabled = false;
+		}
+
 
 	}
 
@@ -32,6 +75,7 @@ public class Click_Stage : MonoBehaviour {
 	}
 
 	public void clickPreschool(){
+		
 		levelButton.SetActive (false);
 		stagePreschool.SetActive (true);
 		backButton.SetActive (true);
