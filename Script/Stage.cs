@@ -15,14 +15,11 @@ public class Stage : MonoBehaviour {
 	private GameObject buttonPreschool;
 	private GameObject buttonKindergarten;
 
-	private bool preschoolLock;
-	private bool KindergartenLock;
+
 	private int countLevel1Complete;
 	private int countLevel2Complete;
 	// Use this for initialization
 	void Start () {
-		preschoolLock = true;
-		KindergartenLock = true;
 		countLevel1Complete = 0;
 		countLevel2Complete = 0;
 

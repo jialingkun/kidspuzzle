@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class Global_Variable : MonoBehaviour {
@@ -20,6 +21,7 @@ public class Global_Variable : MonoBehaviour {
 	private GameObject nextButton;
 	private GameObject nameImage;
 	private GameObject soundTrigger;
+	private List<GameObject> templates;
 	private GameObject[] pieceObject;
 	private RectTransform[] piecePos;
 	private RectTransform[] pieceTargetPos;
@@ -59,9 +61,12 @@ public class Global_Variable : MonoBehaviour {
 		int templateNum = Random.Range (1, 2); //number of template +1
 		string templateName = level + "Template" + templateNum;
 
+		templates = new List<GameObject> ();
 		selectedTemplate = GameObject.Find (templateName);
-		GameObject.Find ("tsTemplate1").SetActive (false);
-		GameObject.Find ("tsTemplate2").SetActive (false);
+		foreach (GameObject template in GameObject.FindGameObjectsWithTag("template")) {
+			templates.Add (template);
+			template.SetActive (false);
+		}
 		selectedTemplate.SetActive (true);
 
 		foreach (GameObject stageSprite in GameObject.FindGameObjectsWithTag("stageImage")) {
@@ -113,8 +118,9 @@ public class Global_Variable : MonoBehaviour {
 				if (Vector2.Distance (piecePos [i].position, pieceTargetPos [i].position) < 0.5f && pieceArrived [i] == false) {
 					pieceArrived [i] = true;
 					countArrived++;
-				} else if(pieceObject[i].GetComponent<Piece_Properties>().getDrag() == false) {
+				} else if(pieceObject[i].GetComponent<Piece_Properties>().getDrag() == false && pieceObject[i].GetComponent<Piece_Properties>().getCompleted() == false) {
 					piecePos [i].position = Vector2.MoveTowards (piecePos [i].position, pieceTargetPos [i].position, pieceSpeed * Time.deltaTime);
+
 				}
 			}
 
@@ -170,6 +176,79 @@ public class Global_Variable : MonoBehaviour {
 		audioSource.PlayOneShot (winSound);
 		yield return new WaitForSeconds(winSound.length);
 		audioSource.PlayOneShot (stageSounds [stageNum]);
+	}
+
+	public void clickNext(){
+		int stageCount = stageImages.Length;
+		if (stageNum >= stageCount - 1) {
+			stageNum = 0;
+		} else {
+			stageNum++;
+		}
+		refresh ();
+	}
+
+	public void refresh(){
+		nextButton.SetActive (false);
+
+		soundTrigger.SetActive (false);
+
+		pieceCompleted = 0;
+		waiting = true;
+		reachTarget = false;
+		isWin = false;
+		countArrived = 0;
+
+		nameImage.GetComponent<Text> ().text = stageNames [stageNum];
+		nameImage.SetActive (false);
+
+		int templateNum = Random.Range (1, 2); //number of template +1
+		string templateName = level + "Template" + templateNum;
+
+		foreach (GameObject template in templates) {
+			template.SetActive (true);
+		}
+		selectedTemplate = GameObject.Find (templateName);
+		foreach (GameObject template in templates) {
+			template.SetActive (false);
+		}
+		selectedTemplate.SetActive (true);
+
+		foreach (GameObject stageSprite in GameObject.FindGameObjectsWithTag("stageImage")) {
+			stageSprite.GetComponent<Image> ().sprite = stageImages [stageNum];
+		}
+
+		RectTransform tempTargetPos;
+		int swapIndex;
+		if (Equals (level, "ts")) {
+			for (int i = 0; i < 4; i++) {
+				pieceArrived [i] = false;
+			}
+
+
+			pieceObject [0] = GameObject.Find ("piece1");
+			pieceObject [1] = GameObject.Find ("piece2");
+			pieceObject [2] = GameObject.Find ("piece3");
+			pieceObject [3] = GameObject.Find ("piece4");
+			for (int i = 0; i < 4; i++) {
+				pieceObject [i].GetComponent<Piece_Properties> ().refresh ();
+				piecePos [i] = pieceObject [i].GetComponent<RectTransform> ();
+			}
+				
+
+			for (int i = 0; i < 4; i++) {
+				swapIndex = Random.Range (0, 4);
+				tempTargetPos = pieceTargetPos [swapIndex];
+				pieceTargetPos [swapIndex] = pieceTargetPos [i];
+				pieceTargetPos [i] = tempTargetPos;
+			}
+
+		} else if (Equals (level, "ps")) {
+		} else if (Equals (level, "ks")) {
+		}
+			
+		StartCoroutine (scrambleDelay ());
+
 	}
 
 }

@@ -95,6 +95,7 @@ public class Piece_Properties : MonoBehaviour {
 				this.GetComponent<RectTransform> ().localPosition = placeHolderPosition;
 				isCompleted = true;
 				globalScript.addPieceCompleted ();
+				isDrag = false;
 			} else {
 				toSmall ();
 				isDrag = false;
@@ -103,7 +104,56 @@ public class Piece_Properties : MonoBehaviour {
 		}
 	}
 
+	public bool getCompleted(){
+		return isCompleted;
+	}
+
 	public bool getDrag(){
 		return isDrag;
+	}
+
+	public void refresh(){
+		isCompleted = false;
+		image = this.transform.Find ("Image").GetComponent<RectTransform> ();
+		globalScript = GameObject.Find ("Canvas").GetComponent<Global_Variable> ();
+		string level = globalScript.getLevel ();
+		if (Equals (level, "ts")) {
+			scale = new Vector2(0.45f ,0.45f);
+		}
+		bigDimension = this.GetComponent<RectTransform> ().sizeDelta;
+		smallDimension = Vector2.Scale(bigDimension,scale);
+		placeHolderPosition = this.GetComponent<RectTransform> ().localPosition;
+		bigImageDimension = image.sizeDelta;
+		smallImageDimension = Vector2.Scale(bigImageDimension,scale);
+		bigImagePosition = image.localPosition;
+
+		float smallImagePositionX;
+		float smallImagePositionY;
+
+		switch (xPositionPattern) {
+		case resizePatternX.RIGHT:
+			smallImagePositionX = -((smallImageDimension.x - smallDimension.x) / 2); 
+			break;
+		case resizePatternX.LEFT:
+			smallImagePositionX = ((smallImageDimension.x-smallDimension.x) / 2);
+			break;
+		default:
+			smallImagePositionX = 0;
+			break;
+		}
+
+		switch (yPositionPattern) {
+		case resizePatternY.UP:
+			smallImagePositionY = -((smallImageDimension.y - smallDimension.y) / 2); 
+			break;
+		case resizePatternY.DOWN:
+			smallImagePositionY = ((smallImageDimension.y-smallDimension.y) / 2);
+			break;
+		default:
+			smallImagePositionY = 0;
+			break;
+		}
+
+		smallImagePosition = new Vector2 (smallImagePositionX, smallImagePositionY);
 	}
 }
