@@ -15,11 +15,16 @@ public class Stage : MonoBehaviour {
 	private GameObject buttonPreschool;
 	private GameObject buttonKindergarten;
 
+	private bool levelSelect;
 
 	private int countLevel1Complete;
 	private int countLevel2Complete;
+
+
 	// Use this for initialization
 	void Start () {
+		levelSelect = true;
+
 		countLevel1Complete = 0;
 		countLevel2Complete = 0;
 
@@ -38,7 +43,6 @@ public class Stage : MonoBehaviour {
 		SaveLoad.Load ();
 
 		foreach (StageData data in SaveLoad.savedLevel1) {
-			Debug.Log ("data:" + data.completed);
 			if (data.completed == true) {
 				countLevel1Complete++;
 			}
@@ -59,10 +63,28 @@ public class Stage : MonoBehaviour {
 			buttonKindergarten.GetComponent<Button> ().enabled = false;
 		}
 
+		if (Equals (PlayerPrefs.GetString ("lastLevel"), "ts")) {
+			clickToodler ();
+		} else if (Equals (PlayerPrefs.GetString ("lastLevel"), "ps")) {
+			clickPreschool ();
+		} else if (Equals (PlayerPrefs.GetString ("lastLevel"), "ks")) {
+			clickKindergarten ();
+		}
 
 	}
 
+	void Update(){
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			if (levelSelect == false) {
+				clickBack ();
+			} else {
+				Application.Quit ();
+			}
+		}
+	}
+
 	public void clickToodler(){
+		levelSelect = false;
 		levelButton.SetActive (false);
 		stageToodler.SetActive (true);
 		backButton.SetActive (true);
@@ -72,7 +94,7 @@ public class Stage : MonoBehaviour {
 	}
 
 	public void clickPreschool(){
-		
+		levelSelect = false;
 		levelButton.SetActive (false);
 		stagePreschool.SetActive (true);
 		backButton.SetActive (true);
@@ -82,6 +104,7 @@ public class Stage : MonoBehaviour {
 	}
 
 	public void clickKindergarten(){
+		levelSelect = false;
 		levelButton.SetActive (false);
 		stageKindergarten.SetActive (true);
 		backButton.SetActive (true);
@@ -91,6 +114,7 @@ public class Stage : MonoBehaviour {
 	}
 
 	public void clickBack(){
+		levelSelect = true;
 		stageToodler.SetActive (false);
 		stagePreschool.SetActive (false);
 		stageKindergarten.SetActive (false);
