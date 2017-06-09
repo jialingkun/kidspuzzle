@@ -28,7 +28,11 @@ public class Piece_Properties : MonoBehaviour {
 		globalScript = GameObject.Find ("Canvas").GetComponent<Global_Variable> ();
 		string level = globalScript.getLevel ();
 		if (Equals (level, "ts")) {
-			scale = new Vector2(0.45f ,0.45f);
+			scale = new Vector2 (0.45f, 0.45f);
+		} else if (Equals (level, "ps")) {
+			scale = new Vector2 (0.65f, 0.65f);
+		} else if (Equals (level, "ks")) {
+			scale = new Vector2 (0.8f, 0.8f);
 		}
 		bigDimension = this.GetComponent<RectTransform> ().sizeDelta;
 		smallDimension = Vector2.Scale(bigDimension,scale);
