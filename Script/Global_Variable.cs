@@ -64,7 +64,7 @@ public class Global_Variable : MonoBehaviour {
 
 
 		//random template to use
-		int templateNum = Random.Range (1, 2); //number of template +1
+		int templateNum = Random.Range (1, 5); //number of template +1
 		string templateName = level + "Template" + templateNum;
 		//select template from random result
 		templates = new List<GameObject> ();
@@ -171,7 +171,6 @@ public class Global_Variable : MonoBehaviour {
 			if (pieceCompleted >= pieceCount && isWin==false) { 
 				//if you win the stage
 				SaveLoad.Save(levelID,stageNum);
-				nextButton.SetActive (true);
 				nameImage.SetActive (true);
 				soundTrigger.SetActive (true);
 				StartCoroutine (waitWinSound ());
@@ -217,6 +216,8 @@ public class Global_Variable : MonoBehaviour {
 		audioSource.PlayOneShot (winSound);
 		yield return new WaitForSeconds(winSound.length);
 		audioSource.PlayOneShot (selectedStages[stageNum].Sound);
+		yield return new WaitForSeconds(selectedStages[stageNum].Sound.length);
+		nextButton.SetActive (true);
 	}
 
 	public void clickNext(){
@@ -263,7 +264,7 @@ public class Global_Variable : MonoBehaviour {
 		countArrived = 0;
 
 		//random template to use
-		int templateNum = Random.Range (1, 2); //number of template +1
+		int templateNum = Random.Range (1, 5); //number of template +1
 		string templateName = level + "Template" + templateNum;
 		//select template from random result
 		foreach (GameObject template in templates) {
@@ -328,67 +329,6 @@ public class Global_Variable : MonoBehaviour {
 		//scramble delay coroutine
 		StartCoroutine (scrambleDelay ());
 
-
-
-		/*
-		nextButton.SetActive (false);
-		soundTrigger.SetActive (false);
-
-		pieceCompleted = 0;
-		waiting = true;
-		reachTarget = false;
-		isWin = false;
-		countArrived = 0;
-
-		nameImage.GetComponent<Text> ().text = selectedStages[stageNum].Name;
-		nameImage.SetActive (false);
-
-		int templateNum = Random.Range (1, 2); //number of template +1
-		string templateName = level + "Template" + templateNum;
-
-		foreach (GameObject template in templates) {
-			template.SetActive (true);
-		}
-		selectedTemplate = GameObject.Find (templateName);
-		foreach (GameObject template in templates) {
-			template.SetActive (false);
-		}
-		selectedTemplate.SetActive (true);
-
-		foreach (GameObject stageSprite in GameObject.FindGameObjectsWithTag("stageImage")) {
-			stageSprite.GetComponent<Image> ().sprite = stageImages [stageNum];
-		}
-
-		RectTransform tempTargetPos;
-		int swapIndex;
-		if (Equals (level, "ts")) {
-			for (int i = 0; i < 4; i++) {
-				pieceArrived [i] = false;
-			}
-
-
-			pieceObject [0] = GameObject.Find ("piece1");
-			pieceObject [1] = GameObject.Find ("piece2");
-			pieceObject [2] = GameObject.Find ("piece3");
-			pieceObject [3] = GameObject.Find ("piece4");
-			for (int i = 0; i < 4; i++) {
-				pieceObject [i].GetComponent<Piece_Properties> ().refresh ();
-				piecePos [i] = pieceObject [i].GetComponent<RectTransform> ();
-			}
-				
-
-			for (int i = 0; i < 4; i++) {
-				swapIndex = Random.Range (0, 4);
-				tempTargetPos = pieceTargetPos [swapIndex];
-				pieceTargetPos [swapIndex] = pieceTargetPos [i];
-				pieceTargetPos [i] = tempTargetPos;
-			}
-
-		} else if (Equals (level, "ps")) {
-		} else if (Equals (level, "ks")) {
-		}
-			
-		StartCoroutine (scrambleDelay ());*/
 	}
 
 }

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class Stage : MonoBehaviour {
 	public int unlockLevel2Condition;
 	public int unlockLevel3Condition;
-	public Sprite lockImage;
 	private GameObject levelButton;
 	private GameObject backButton;
 	private GameObject stageToodler;
@@ -14,6 +13,8 @@ public class Stage : MonoBehaviour {
 	private GameObject stageKindergarten;
 	private GameObject buttonPreschool;
 	private GameObject buttonKindergarten;
+	private GameObject PreschoolLock;
+	private GameObject KindergartenLock;
 
 	private bool levelSelect;
 
@@ -35,6 +36,8 @@ public class Stage : MonoBehaviour {
 		stageKindergarten = GameObject.Find ("StageKindergarten");
 		buttonPreschool = GameObject.Find ("Preschool");
 		buttonKindergarten = GameObject.Find ("Kindergarten");
+		PreschoolLock = GameObject.Find ("PreschoolLock");
+		KindergartenLock = GameObject.Find ("KindergartenLock");
 		stageToodler.SetActive (false);
 		stagePreschool.SetActive (false);
 		stageKindergarten.SetActive (false);
@@ -54,13 +57,15 @@ public class Stage : MonoBehaviour {
 			}
 		}
 
-		if (countLevel1Complete<unlockLevel2Condition) {
-			buttonPreschool.GetComponent<Image> ().sprite = lockImage;
+		if (countLevel1Complete < unlockLevel2Condition) {
 			buttonPreschool.GetComponent<Button> ().enabled = false;
+		} else {
+			PreschoolLock.SetActive (false);
 		}
-		if (countLevel2Complete<unlockLevel3Condition) {
-			buttonKindergarten.GetComponent<Image> ().sprite = lockImage;
+		if (countLevel2Complete < unlockLevel3Condition) {
 			buttonKindergarten.GetComponent<Button> ().enabled = false;
+		} else {
+			KindergartenLock.SetActive (false);
 		}
 
 		if (Equals (PlayerPrefs.GetString ("lastLevel"), "ts")) {
