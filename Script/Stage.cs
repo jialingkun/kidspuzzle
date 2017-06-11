@@ -6,11 +6,17 @@ using UnityEngine.UI;
 public class Stage : MonoBehaviour {
 	public int unlockLevel2Condition;
 	public int unlockLevel3Condition;
+
+	private Sprite[] ToodlerStageButton;
+	private Sprite[] PreschoolStageButton;
+	private Sprite[] KindergartenStageButton;
+
 	private GameObject levelButton;
 	private GameObject backButton;
 	private GameObject stageToodler;
 	private GameObject stagePreschool;
 	private GameObject stageKindergarten;
+	private GameObject buttonToodler;
 	private GameObject buttonPreschool;
 	private GameObject buttonKindergarten;
 	private GameObject PreschoolLock;
@@ -24,27 +30,70 @@ public class Stage : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
 		levelSelect = true;
 
 		countLevel1Complete = 0;
 		countLevel2Complete = 0;
 
+		//get permanent data
+		Game_Data permanentData = SaveLoad.getPermanentData ();
+
+		//get stage button permanent variable
+		ToodlerStageButton = permanentData.ToodlerStageButton;
+		PreschoolStageButton = permanentData.PreschoolStageButton;
+		KindergartenStageButton = permanentData.KindergartenStageButton;
+
+		//find gameobject
 		levelButton = GameObject.Find ("Level");
 		backButton = GameObject.Find ("Back");
 		stageToodler = GameObject.Find ("StageToodler");
 		stagePreschool = GameObject.Find ("StagePreschool");
 		stageKindergarten = GameObject.Find ("StageKindergarten");
+		buttonToodler = GameObject.Find ("Toddler");
 		buttonPreschool = GameObject.Find ("Preschool");
 		buttonKindergarten = GameObject.Find ("Kindergarten");
 		PreschoolLock = GameObject.Find ("PreschoolLock");
 		KindergartenLock = GameObject.Find ("KindergartenLock");
+
+		//put all sprite asset initialize by permanent variable
+		GameObject.Find ("Title").GetComponent<Image> ().sprite = permanentData.titleImage;
+		GameObject.Find ("Background").GetComponent<Image> ().sprite = permanentData.backgroundImage;
+		backButton.GetComponent<Image> ().sprite = permanentData.backImage;
+		buttonToodler.GetComponent<Image> ().sprite = permanentData.ToodlerImage;
+		buttonPreschool.GetComponent<Image> ().sprite = permanentData.PreschoolImage;
+		buttonKindergarten.GetComponent<Image> ().sprite = permanentData.KindergartenImage;
+		PreschoolLock.GetComponent<Image> ().sprite = permanentData.lockImage;
+		KindergartenLock.GetComponent<Image> ().sprite = permanentData.lockImage;
+
+
+		//Stage Button Sprite
+		int ToodlerStagesCount = 10;
+		int PreschoolStagesCount = 6;
+		int KindergartenStagesCount = 10;
+		for (int i = 0; i < ToodlerStagesCount; i++) {
+			GameObject.Find ("ts_" + i).GetComponent<Image> ().sprite = ToodlerStageButton [i];
+		}
+		for (int i = 0; i < PreschoolStagesCount; i++) {
+			GameObject.Find ("ps_" + i).GetComponent<Image> ().sprite = PreschoolStageButton [i];
+		}
+		for (int i = 0; i < KindergartenStagesCount; i++) {
+			GameObject.Find ("ks_" + i).GetComponent<Image> ().sprite = KindergartenStageButton [i];
+		}
+			
+		//disable object
 		stageToodler.SetActive (false);
 		stagePreschool.SetActive (false);
 		stageKindergarten.SetActive (false);
 		backButton.SetActive (false);
 
+
+
+
+		//load database
 		SaveLoad.Load ();
 
+		//count level complete
 		foreach (StageData data in SaveLoad.savedLevel1) {
 			if (data.completed == true) {
 				countLevel1Complete++;
@@ -57,6 +106,7 @@ public class Stage : MonoBehaviour {
 			}
 		}
 
+		//unlock level
 		if (countLevel1Complete < unlockLevel2Condition) {
 			buttonPreschool.GetComponent<Button> ().enabled = false;
 		} else {
@@ -68,6 +118,7 @@ public class Stage : MonoBehaviour {
 			KindergartenLock.SetActive (false);
 		}
 
+		//back to stage select from gameplay
 		if (Equals (PlayerPrefs.GetString ("lastLevel"), "ts")) {
 			clickToodler ();
 		} else if (Equals (PlayerPrefs.GetString ("lastLevel"), "ps")) {

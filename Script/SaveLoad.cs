@@ -8,9 +8,26 @@ public static class SaveLoad {
 	
 	public static List<StageData> savedLevel1 = new List<StageData>();
 	public static List<StageData> savedLevel2 = new List<StageData>();
-
+	public static GameObject permanentObject;
 
 	//it's static so we can call it from anywhere
+	public static void Store(GameObject dataObject){
+		if (permanentObject != null) {
+			GameObject.Destroy(permanentObject);
+		}
+		permanentObject = dataObject;
+	}
+
+	public static void Clear(){
+		if (permanentObject != null) {
+			permanentObject = null;
+		}
+	}
+
+	public static Game_Data getPermanentData(){
+		return permanentObject.GetComponent<Game_Data> ();
+	}
+
 	public static void Save(int level, int stageNum) {
 
 		savedLevel1.Clear();

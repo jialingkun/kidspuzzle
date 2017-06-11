@@ -7,11 +7,16 @@ public class Global_Variable : MonoBehaviour {
 	public float pieceSpeed;
 	public float waitingTime;
 	public float waitingSoundTime;
-	public AudioClip winSound;
-	public Stage_Component[] ToodlerStages;
-	public Stage_Component[] PreschoolStages;
-	public Stage_Component[] KindergartenStages;
 
+	private AudioClip winSound;
+	private Template_Component[] ToodlerTemplates;
+	private Template_Component[] PreschoolTemplates;
+	private Template_Component[] KindergartenTemplates;
+	private Stage_Component[] ToodlerStages;
+	private Stage_Component[] PreschoolStages;
+	private Stage_Component[] KindergartenStages;
+
+	private Template_Component[] selectedTemplates;
 	private Stage_Component[] selectedStages;
 	private string stageID;
 	private string level;
@@ -19,6 +24,7 @@ public class Global_Variable : MonoBehaviour {
 	private int stageNum;
 	private AudioSource audioSource;
 	private GameObject selectedTemplate;
+
 	private GameObject nextButton;
 	private GameObject nameImage;
 	private GameObject soundTrigger;
@@ -37,6 +43,23 @@ public class Global_Variable : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		//get permanent data
+		Game_Data permanentData = SaveLoad.getPermanentData ();
+
+		//put all permanent data
+		winSound = permanentData.winSound;
+		ToodlerTemplates = permanentData.ToodlerTemplate;
+		PreschoolTemplates = permanentData.PreschoolTemplate;
+		KindergartenTemplates = permanentData.KindergartenTemplate;
+		ToodlerStages = permanentData.ToodlerStages;
+		PreschoolStages = permanentData.PreschoolStages;
+		KindergartenStages = permanentData.KindergartenStages;
+
+		//permanent data sprite
+		GameObject.Find ("Background").GetComponent<Image> ().sprite = permanentData.backgroundImage;
+		GameObject.Find ("next").GetComponent<Image> ().sprite = permanentData.nextImage;
+		GameObject.Find ("home").GetComponent<Image> ().sprite = permanentData.backImage;
 
 		//next button
 		nextButton = GameObject.Find ("next");
@@ -80,15 +103,21 @@ public class Global_Variable : MonoBehaviour {
 			pieceCount = 4;
 			levelID = 1;
 			selectedStages = ToodlerStages;
+			selectedTemplates = ToodlerTemplates;
 		} else if (Equals (level, "ps")) {
 			pieceCount = 6;
 			levelID = 2;
 			selectedStages = PreschoolStages;
+			selectedTemplates = PreschoolTemplates;
 		} else if (Equals (level, "ks")) {
 			pieceCount = 9;
 			levelID = 3;
 			selectedStages = KindergartenStages;
+			selectedTemplates = KindergartenTemplates;
 		}
+
+		//fullpiece mask sprite
+		GameObject.Find("fullPiece").GetComponent<Image>().sprite = selectedTemplates[templateNum-1].fullPiece;
 
 		//stage name
 		nameImage = GameObject.Find ("name");
@@ -113,6 +142,7 @@ public class Global_Variable : MonoBehaviour {
 
 		for (int i = 0; i < pieceCount; i++) {
 
+
 			//piece arrived
 			pieceArrived [i] = false;
 
@@ -120,6 +150,9 @@ public class Global_Variable : MonoBehaviour {
 			numberFromOne = i + 1;
 			pieceName = "piece" + numberFromOne;
 			pieceObject [i] = GameObject.Find (pieceName);
+
+			//piece mask sprite
+			pieceObject[i].GetComponent<Image>().sprite = selectedTemplates[templateNum-1].piece[i];
 
 			//piece pos
 			piecePos[i] = pieceObject[i].GetComponent<RectTransform> ();
@@ -230,16 +263,19 @@ public class Global_Variable : MonoBehaviour {
 				pieceCount = 6;
 				levelID = 2;
 				selectedStages = PreschoolStages;
+				selectedTemplates = PreschoolTemplates;
 			} else if (Equals (level, "ps")) {
 				level = "ks";
 				pieceCount = 9;
 				levelID = 3;
 				selectedStages = KindergartenStages;
+				selectedTemplates = KindergartenTemplates;
 			} else if (Equals (level, "ks")) {
 				level = "ts";
 				pieceCount = 4;
 				levelID = 1;
 				selectedStages = ToodlerStages;
+				selectedTemplates = ToodlerTemplates;
 			}
 
 		} else {
@@ -276,6 +312,10 @@ public class Global_Variable : MonoBehaviour {
 		}
 		selectedTemplate.SetActive (true);
 
+		//fullpiece mask sprite
+		GameObject.Find("fullPiece").GetComponent<Image>().sprite = selectedTemplates[templateNum-1].fullPiece;
+
+
 		//stage name
 		nameImage.GetComponent<Text> ().text = selectedStages[stageNum].Name;
 		nameImage.SetActive (false);
@@ -306,6 +346,9 @@ public class Global_Variable : MonoBehaviour {
 			pieceName = "piece" + numberFromOne;
 			pieceObject [i] = GameObject.Find (pieceName);
 			pieceObject [i].GetComponent<Piece_Properties> ().refresh ();
+
+			//piece mask sprite
+			pieceObject[i].GetComponent<Image>().sprite = selectedTemplates[templateNum-1].piece[i];
 
 			//piece pos
 			piecePos[i] = pieceObject[i].GetComponent<RectTransform> ();
