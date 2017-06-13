@@ -8,6 +8,7 @@ public static class SaveLoad {
 	
 	public static List<StageData> savedLevel1 = new List<StageData>();
 	public static List<StageData> savedLevel2 = new List<StageData>();
+	public static List<StageData> savedLevel3 = new List<StageData>();
 	public static GameObject permanentObject;
 
 	//it's static so we can call it from anywhere
@@ -29,10 +30,10 @@ public static class SaveLoad {
 	}
 
 	public static void Save(int level, int stageNum) {
-
-		savedLevel1.Clear();
-		savedLevel2.Clear();
 		Load();
+
+		//savedLevel1.Clear();
+		//savedLevel2.Clear();
 
 		StageData completedData = new StageData (true);
 		StageData defaultData = new StageData (false);
@@ -44,11 +45,20 @@ public static class SaveLoad {
 			while (savedLevel2.Count <= stageNum) {
 				savedLevel2.Add (defaultData);
 			}
+		}else if(level == 3 && savedLevel3.Count <= stageNum) { //Initialize
+			while (savedLevel3.Count <= stageNum) {
+				savedLevel3.Add (defaultData);
+			}
 		}
+
+
+
 		if ( level == 1 && savedLevel1 [stageNum].completed == false) {
 			savedLevel1[stageNum]=completedData;
 		}else if( level == 2 && savedLevel2 [stageNum].completed == false) {
 			savedLevel2[stageNum]=completedData;
+		}else if( level == 3 && savedLevel3 [stageNum].completed == false) {
+			savedLevel3[stageNum]=completedData;
 		}
 			
 
@@ -60,6 +70,10 @@ public static class SaveLoad {
 
 		file = File.Create (Application.persistentDataPath + "/savedLevel2.gd"); //you can call it anything you want
 		bf.Serialize(file, savedLevel2);
+		file.Close();
+
+		file = File.Create (Application.persistentDataPath + "/savedLevel3.gd"); //you can call it anything you want
+		bf.Serialize(file, savedLevel3);
 		file.Close();
 	}   
 
@@ -74,6 +88,11 @@ public static class SaveLoad {
 		if(File.Exists(Application.persistentDataPath + "/savedLevel2.gd")) {
 			file = File.Open(Application.persistentDataPath + "/savedLevel2.gd", FileMode.Open);
 			savedLevel2 = (List<StageData>)bf.Deserialize(file);
+			file.Close();
+		}
+		if(File.Exists(Application.persistentDataPath + "/savedLevel3.gd")) {
+			file = File.Open(Application.persistentDataPath + "/savedLevel3.gd", FileMode.Open);
+			savedLevel3 = (List<StageData>)bf.Deserialize(file);
 			file.Close();
 		}
 	}

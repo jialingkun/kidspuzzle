@@ -14,11 +14,15 @@ public class Game_Data : MonoBehaviour {
 	public Sprite ToodlerImage;
 	public Sprite PreschoolImage;
 	public Sprite KindergartenImage;
-	public Sprite lockImage;
+	public Sprite lockImageLevel2;
+	public Sprite lockImageLevel3;
+	public Sprite level1Label;
+	public Sprite level2Label;
+	public Sprite level3Label;
 
-	public Sprite[] ToodlerStageButton;
-	public Sprite[] PreschoolStageButton;
-	public Sprite[] KindergartenStageButton;
+	public Select_Stage_Component[] ToodlerStageButton;
+	public Select_Stage_Component[] PreschoolStageButton;
+	public Select_Stage_Component[] KindergartenStageButton;
 
 	public Template_Component[] ToodlerTemplate;
 	public Template_Component[] PreschoolTemplate;

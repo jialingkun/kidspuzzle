@@ -26,13 +26,13 @@ public class Piece_Properties : MonoBehaviour {
 		isCompleted = false;
 		image = this.transform.Find ("Image").GetComponent<RectTransform> ();
 		globalScript = GameObject.Find ("Canvas").GetComponent<Global_Variable> ();
-		string level = globalScript.getLevel ();
+		string level = globalScript.getDifficulty ();
 		if (Equals (level, "ts")) {
 			scale = new Vector2 (0.45f, 0.45f);
 		} else if (Equals (level, "ps")) {
-			scale = new Vector2 (0.65f, 0.65f);
+			scale = new Vector2 (0.50f, 0.50f);
 		} else if (Equals (level, "ks")) {
-			scale = new Vector2 (0.8f, 0.8f);
+			scale = new Vector2 (0.60f, 0.60f);
 		}
 		bigDimension = this.GetComponent<RectTransform> ().sizeDelta;
 		smallDimension = Vector2.Scale(bigDimension,scale);
@@ -120,7 +120,7 @@ public class Piece_Properties : MonoBehaviour {
 		isCompleted = false;
 		image = this.transform.Find ("Image").GetComponent<RectTransform> ();
 		globalScript = GameObject.Find ("Canvas").GetComponent<Global_Variable> ();
-		string level = globalScript.getLevel ();
+		string level = globalScript.getDifficulty ();
 		if (Equals (level, "ts")) {
 			scale = new Vector2(0.45f ,0.45f);
 		}

@@ -19,6 +19,7 @@ public class Global_Variable : MonoBehaviour {
 	private Template_Component[] selectedTemplates;
 	private Stage_Component[] selectedStages;
 	private string stageID;
+	private string difficulty;
 	private string level;
 	private int levelID;
 	private int stageNum;
@@ -84,11 +85,53 @@ public class Global_Variable : MonoBehaviour {
 		level = stageID.Substring(0,2);
 		stageNum = int.Parse(stageID.Substring(3,2));
 
+		//random difficulty
+		int difficultyNum = Random.Range (1, 4); //1-2 easier, 3 harder
+		if (Equals (level, "ts")) {
+			
+			levelID = 1;
+			selectedStages = ToodlerStages;
+
+			if (difficultyNum < 3) {
+				difficulty = "ts";
+			} else {
+				difficulty = "ps";
+			}
+
+		} else if (Equals (level, "ps")) {
+			
+			levelID = 2;
+			selectedStages = PreschoolStages;
+
+			if (difficultyNum < 3) {
+				difficulty = "ps";
+			} else {
+				difficulty = "ks";
+			}
+
+		} else if (Equals (level, "ks")) {
+			levelID = 3;
+			selectedStages = KindergartenStages;
+			difficulty = "ks";
+		}
+
+
+		//initialize depend on difficulty
+		if (Equals (difficulty, "ts")) {
+			pieceCount = 4;
+			selectedTemplates = ToodlerTemplates;
+		} else if (Equals (difficulty, "ps")) {
+			pieceCount = 6;
+			selectedTemplates = PreschoolTemplates;
+		} else if (Equals (difficulty, "ks")) {
+			pieceCount = 9;
+			selectedTemplates = KindergartenTemplates;
+		}
 
 
 		//random template to use
 		int templateNum = Random.Range (1, 5); //number of template +1
-		string templateName = level + "Template" + templateNum;
+		string templateName = difficulty + "Template" + templateNum;
 		//select template from random result
 		templates = new List<GameObject> ();
 		selectedTemplate = GameObject.Find (templateName);
@@ -98,23 +141,7 @@ public class Global_Variable : MonoBehaviour {
 		}
 		selectedTemplate.SetActive (true);
 
-		//initialize depend on level
-		if (Equals (level, "ts")) {
-			pieceCount = 4;
-			levelID = 1;
-			selectedStages = ToodlerStages;
-			selectedTemplates = ToodlerTemplates;
-		} else if (Equals (level, "ps")) {
-			pieceCount = 6;
-			levelID = 2;
-			selectedStages = PreschoolStages;
-			selectedTemplates = PreschoolTemplates;
-		} else if (Equals (level, "ks")) {
-			pieceCount = 9;
-			levelID = 3;
-			selectedStages = KindergartenStages;
-			selectedTemplates = KindergartenTemplates;
-		}
+
 
 		//fullpiece mask sprite
 		GameObject.Find("fullPiece").GetComponent<Image>().sprite = selectedTemplates[templateNum-1].fullPiece;
@@ -158,7 +185,7 @@ public class Global_Variable : MonoBehaviour {
 			piecePos[i] = pieceObject[i].GetComponent<RectTransform> ();
 
 			//piece target pos
-			pieceTargetPosName = level+"PiecePos"+numberFromOne;
+			pieceTargetPosName = difficulty+"PiecePos"+numberFromOne;
 			pieceTargetPos [i] = GameObject.Find (pieceTargetPosName).GetComponent<RectTransform> ();
 		}
 
@@ -222,8 +249,8 @@ public class Global_Variable : MonoBehaviour {
 		waiting = false;
 	}
 
-	public string getLevel(){
-		return level;
+	public string getDifficulty(){
+		return difficulty;
 	}
 
 	public bool getWaitingStatus(){
@@ -260,22 +287,22 @@ public class Global_Variable : MonoBehaviour {
 
 			if (Equals (level, "ts")) {
 				level = "ps";
-				pieceCount = 6;
+				//pieceCount = 6;
 				levelID = 2;
 				selectedStages = PreschoolStages;
-				selectedTemplates = PreschoolTemplates;
+				//selectedTemplates = PreschoolTemplates;
 			} else if (Equals (level, "ps")) {
 				level = "ks";
-				pieceCount = 9;
+				//pieceCount = 9;
 				levelID = 3;
 				selectedStages = KindergartenStages;
-				selectedTemplates = KindergartenTemplates;
+				//selectedTemplates = KindergartenTemplates;
 			} else if (Equals (level, "ks")) {
 				level = "ts";
-				pieceCount = 4;
+				//pieceCount = 4;
 				levelID = 1;
 				selectedStages = ToodlerStages;
-				selectedTemplates = ToodlerTemplates;
+				//selectedTemplates = ToodlerTemplates;
 			}
 
 		} else {
@@ -299,9 +326,53 @@ public class Global_Variable : MonoBehaviour {
 		isWin = false;
 		countArrived = 0;
 
+		//random difficulty
+		int difficultyNum = Random.Range (1, 4); //1-2 easier, 3 harder
+		if (Equals (level, "ts")) {
+
+			levelID = 1;
+			selectedStages = ToodlerStages;
+
+			if (difficultyNum < 3) {
+				difficulty = "ts";
+			} else {
+				difficulty = "ps";
+			}
+
+		} else if (Equals (level, "ps")) {
+
+			levelID = 2;
+			selectedStages = PreschoolStages;
+
+			if (difficultyNum < 3) {
+				difficulty = "ps";
+			} else {
+				difficulty = "ks";
+			}
+
+		} else if (Equals (level, "ks")) {
+			levelID = 3;
+			selectedStages = KindergartenStages;
+			difficulty = "ks";
+		}
+
+		//initialize depend on difficulty
+		if (Equals (difficulty, "ts")) {
+			pieceCount = 4;
+			selectedTemplates = ToodlerTemplates;
+		} else if (Equals (difficulty, "ps")) {
+			pieceCount = 6;
+			selectedTemplates = PreschoolTemplates;
+		} else if (Equals (difficulty, "ks")) {
+			pieceCount = 9;
+			selectedTemplates = KindergartenTemplates;
+		}
+
+
+
 		//random template to use
 		int templateNum = Random.Range (1, 5); //number of template +1
-		string templateName = level + "Template" + templateNum;
+		string templateName = difficulty + "Template" + templateNum;
 		//select template from random result
 		foreach (GameObject template in templates) {
 			template.SetActive (true);
@@ -354,7 +425,7 @@ public class Global_Variable : MonoBehaviour {
 			piecePos[i] = pieceObject[i].GetComponent<RectTransform> ();
 
 			//piece target pos
-			pieceTargetPosName = level+"PiecePos"+numberFromOne;
+			pieceTargetPosName = difficulty+"PiecePos"+numberFromOne;
 			pieceTargetPos [i] = GameObject.Find (pieceTargetPosName).GetComponent<RectTransform> ();
 		}
 
