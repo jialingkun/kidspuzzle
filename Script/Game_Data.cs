@@ -5,12 +5,15 @@ using UnityEngine.UI;
 public class Game_Data : MonoBehaviour {
 
 	public AudioClip winSound;
+	public AudioClip unlockSound;
 
 	public Sprite splashImage;
 	public Sprite backgroundImage;
 	public Sprite titleImage;
 	public Sprite backImage;
 	public Sprite nextImage;
+	public Sprite closeImage;
+	public Sprite UnlockImage;
 	public Sprite ToodlerImage;
 	public Sprite PreschoolImage;
 	public Sprite KindergartenImage;
@@ -19,6 +22,7 @@ public class Game_Data : MonoBehaviour {
 	public Sprite level1Label;
 	public Sprite level2Label;
 	public Sprite level3Label;
+
 
 	public Select_Stage_Component[] ToodlerStageButton;
 	public Select_Stage_Component[] PreschoolStageButton;
@@ -31,6 +35,10 @@ public class Game_Data : MonoBehaviour {
 	public Stage_Component[] ToodlerStages;
 	public Stage_Component[] PreschoolStages;
 	public Stage_Component[] KindergartenStages;
+
+	public int unlockLevel2Condition;
+	public int unlockLevel3Condition;
+	public int interstitialCondition;
 
 
 	void Awake() {

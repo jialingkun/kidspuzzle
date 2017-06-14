@@ -9,6 +9,7 @@ public class Global_Variable : MonoBehaviour {
 	public float waitingSoundTime;
 
 	private AudioClip winSound;
+	private AudioClip unlockSound;
 	private Template_Component[] ToodlerTemplates;
 	private Template_Component[] PreschoolTemplates;
 	private Template_Component[] KindergartenTemplates;
@@ -26,9 +27,14 @@ public class Global_Variable : MonoBehaviour {
 	private AudioSource audioSource;
 	private GameObject selectedTemplate;
 
+	private Game_Data permanentData;
+	private Ads AdsData;
+
 	private GameObject nextButton;
 	private GameObject nameImage;
 	private GameObject soundTrigger;
+	private GameObject unlockNotification;
+	private GameObject unlockMessage;
 	private List<GameObject> templates;
 	private GameObject[] pieceObject;
 	private RectTransform[] piecePos;
@@ -37,6 +43,8 @@ public class Global_Variable : MonoBehaviour {
 	private int pieceCount;
 	private int countArrived;
 	private int pieceCompleted;
+	private int countLevel1Complete;
+	private int countLevel2Complete;
 	private bool[] pieceArrived;
 	private bool waiting;
 	private bool reachTarget;
@@ -44,12 +52,21 @@ public class Global_Variable : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
+
 
 		//get permanent data
-		Game_Data permanentData = SaveLoad.getPermanentData ();
+		permanentData = SaveLoad.getPermanentData ();
+
+		//get ads data
+		AdsData = SaveLoad.getAdsComponent ();
+
+		//show banner ads
+		AdsData.showBannerTop ();
 
 		//put all permanent data
 		winSound = permanentData.winSound;
+		unlockSound = permanentData.unlockSound;
 		ToodlerTemplates = permanentData.ToodlerTemplate;
 		PreschoolTemplates = permanentData.PreschoolTemplate;
 		KindergartenTemplates = permanentData.KindergartenTemplate;
@@ -61,10 +78,17 @@ public class Global_Variable : MonoBehaviour {
 		GameObject.Find ("Background").GetComponent<Image> ().sprite = permanentData.backgroundImage;
 		GameObject.Find ("next").GetComponent<Image> ().sprite = permanentData.nextImage;
 		GameObject.Find ("home").GetComponent<Image> ().sprite = permanentData.backImage;
+		GameObject.Find ("unlockNotification").GetComponent<Image> ().sprite = permanentData.UnlockImage;
+		GameObject.Find ("close").GetComponent<Image> ().sprite = permanentData.closeImage;
 
 		//next button
 		nextButton = GameObject.Find ("next");
 		nextButton.SetActive (false);
+
+		//unlock notification
+		unlockNotification = GameObject.Find ("unlockNotification");
+		unlockMessage = GameObject.Find ("unlockMessage");
+		unlockNotification.SetActive (false);
 
 		//sound button
 		soundTrigger = GameObject.Find ("soundTrigger");
@@ -230,7 +254,28 @@ public class Global_Variable : MonoBehaviour {
 
 			if (pieceCompleted >= pieceCount && isWin==false) { 
 				//if you win the stage
+
+				//save
 				SaveLoad.Save(levelID,stageNum);
+
+				//number of stage completed
+				countLevel1Complete = 0;
+				countLevel2Complete = 0;
+				//count level complete
+				foreach (StageData data in SaveLoad.savedLevel1) {
+					if (data.completed == true) {
+						countLevel1Complete++;
+					}
+				}
+				foreach (StageData data in SaveLoad.savedLevel2) {
+					if (data.completed == true) {
+						countLevel2Complete++;
+					}
+				}
+
+				//interstitial counter
+				AdsData.addInterstitialCounter();
+
 				nameImage.SetActive (true);
 				soundTrigger.SetActive (true);
 				StartCoroutine (waitWinSound ());
@@ -278,37 +323,70 @@ public class Global_Variable : MonoBehaviour {
 		audioSource.PlayOneShot (selectedStages[stageNum].Sound);
 		yield return new WaitForSeconds(selectedStages[stageNum].Sound.length);
 		nextButton.SetActive (true);
+
+		//notification on unlock
+		if (countLevel1Complete == permanentData.unlockLevel2Condition && SaveLoad.getNotificationLevel2Status() == false) {
+			unlockMessage.GetComponent<Text>().text = "Level 2 Unlocked";
+			unlockNotification.SetActive (true);
+			SaveLoad.notificationLevel2Displayed ();
+			audioSource.PlayOneShot (unlockSound);
+		}
+		if (countLevel2Complete == permanentData.unlockLevel3Condition && SaveLoad.getNotificationLevel3Status() == false) {
+			unlockMessage.GetComponent<Text>().text = "Level 3 Unlocked";
+			unlockNotification.SetActive (true);
+			SaveLoad.notificationLevel3Displayed ();
+			audioSource.PlayOneShot (unlockSound);
+		}
+
+		//interstitial ads
+		if(permanentData.interstitialCondition<=AdsData.getInterstitialCounter()){
+			AdsData.clearInterstitialCounter ();
+			AdsData.showInterstitial ();
+
+		}
+
+
 	}
 
 	public void clickNext(){
 		int stageCount = selectedStages.Length;
 		if (stageNum >= stageCount - 1) {
+			
 			stageNum = 0;
 
 			if (Equals (level, "ts")) {
-				level = "ps";
-				//pieceCount = 6;
-				levelID = 2;
-				selectedStages = PreschoolStages;
-				//selectedTemplates = PreschoolTemplates;
+				if (countLevel1Complete < permanentData.unlockLevel2Condition) {
+					//if unlock condition isn't completed, yet next level button pressed
+				} else {
+					level = "ps";
+					levelID = 2;
+					selectedStages = PreschoolStages;
+				}
 			} else if (Equals (level, "ps")) {
-				level = "ks";
-				//pieceCount = 9;
-				levelID = 3;
-				selectedStages = KindergartenStages;
-				//selectedTemplates = KindergartenTemplates;
+				if (countLevel2Complete < permanentData.unlockLevel3Condition) {
+					//if unlock condition isn't completed, yet next level button pressed
+					level = "ts";
+					levelID = 1;
+					selectedStages = ToodlerStages;
+				} else {
+					level = "ks";
+					levelID = 3;
+					selectedStages = KindergartenStages;
+				}
 			} else if (Equals (level, "ks")) {
 				level = "ts";
-				//pieceCount = 4;
 				levelID = 1;
 				selectedStages = ToodlerStages;
-				//selectedTemplates = ToodlerTemplates;
 			}
 
 		} else {
 			stageNum++;
 		}
 		refresh ();
+	}
+
+	public void clickCloseNotification(){
+		unlockNotification.SetActive (false);
 	}
 
 	public void refresh(){
@@ -318,6 +396,9 @@ public class Global_Variable : MonoBehaviour {
 
 		//sound button
 		soundTrigger.SetActive (false);
+
+		//unlock notification
+		unlockNotification.SetActive (false);
 
 		//initialize
 		pieceCompleted = 0;

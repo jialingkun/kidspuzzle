@@ -10,6 +10,8 @@ public static class SaveLoad {
 	public static List<StageData> savedLevel2 = new List<StageData>();
 	public static List<StageData> savedLevel3 = new List<StageData>();
 	public static GameObject permanentObject;
+	public static bool notificationUnlockLevel2;
+	public static bool notificationUnlockLevel3;
 
 	//it's static so we can call it from anywhere
 	public static void Store(GameObject dataObject){
@@ -17,6 +19,8 @@ public static class SaveLoad {
 			GameObject.Destroy(permanentObject);
 		}
 		permanentObject = dataObject;
+		notificationUnlockLevel2 = false;
+		notificationUnlockLevel3 = false;
 	}
 
 	public static void Clear(){
@@ -29,11 +33,44 @@ public static class SaveLoad {
 		return permanentObject.GetComponent<Game_Data> ();
 	}
 
+	public static bool getNotificationLevel2Status(){
+		return notificationUnlockLevel2;
+	}
+
+	public static void notificationLevel2Displayed(){
+		notificationUnlockLevel2 = true;
+		BinaryFormatter bf = new BinaryFormatter();
+		FileStream file = File.Create (Application.persistentDataPath + "/notificationLevel2.gd"); //you can call it anything you want
+		bf.Serialize(file, notificationUnlockLevel2);
+		file.Close();
+
+
+	}
+
+	public static bool getNotificationLevel3Status(){
+		return notificationUnlockLevel3;
+	}
+
+	public static void notificationLevel3Displayed(){
+		notificationUnlockLevel3 = true;
+		BinaryFormatter bf = new BinaryFormatter();
+		FileStream file = File.Create (Application.persistentDataPath + "/notificationLevel3.gd"); //you can call it anything you want
+		bf.Serialize(file, notificationUnlockLevel3);
+		file.Close();
+	}
+
+	public static Ads getAdsComponent(){
+		return permanentObject.GetComponent<Ads> ();
+	}
+
 	public static void Save(int level, int stageNum) {
 		Load();
 
 		//savedLevel1.Clear();
 		//savedLevel2.Clear();
+		//savedLevel3.Clear();
+		//notificationUnlockLevel2 = false;
+		//notificationUnlockLevel3 = false;
 
 		StageData completedData = new StageData (true);
 		StageData defaultData = new StageData (false);
@@ -93,6 +130,17 @@ public static class SaveLoad {
 		if(File.Exists(Application.persistentDataPath + "/savedLevel3.gd")) {
 			file = File.Open(Application.persistentDataPath + "/savedLevel3.gd", FileMode.Open);
 			savedLevel3 = (List<StageData>)bf.Deserialize(file);
+			file.Close();
+		}
+
+		if(File.Exists(Application.persistentDataPath + "/notificationLevel2.gd")) {
+			file = File.Open(Application.persistentDataPath + "/notificationLevel2.gd", FileMode.Open);
+			notificationUnlockLevel2 = (bool)bf.Deserialize(file);
+			file.Close();
+		}
+		if(File.Exists(Application.persistentDataPath + "/notificationLevel3.gd")) {
+			file = File.Open(Application.persistentDataPath + "/notificationLevel3.gd", FileMode.Open);
+			notificationUnlockLevel3 = (bool)bf.Deserialize(file);
 			file.Close();
 		}
 	}

@@ -4,8 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Stage : MonoBehaviour {
-	public int unlockLevel2Condition;
-	public int unlockLevel3Condition;
+	
 
 	private Select_Stage_Component[] ToodlerStageButton;
 	private Select_Stage_Component[] PreschoolStageButton;
@@ -36,8 +35,14 @@ public class Stage : MonoBehaviour {
 		countLevel1Complete = 0;
 		countLevel2Complete = 0;
 
+		//show banner ads
+		SaveLoad.getAdsComponent ().showBannerBottom ();
+
+
 		//get permanent data
 		Game_Data permanentData = SaveLoad.getPermanentData ();
+
+
 
 		//get stage button permanent variable
 		ToodlerStageButton = permanentData.ToodlerStageButton;
@@ -87,12 +92,12 @@ public class Stage : MonoBehaviour {
 		}
 
 		//unlock level
-		if (countLevel1Complete < unlockLevel2Condition) {
+		if (countLevel1Complete < permanentData.unlockLevel2Condition) {
 			buttonPreschool.GetComponent<Button> ().enabled = false;
 		} else {
 			PreschoolLock.SetActive (false);
 		}
-		if (countLevel2Complete < unlockLevel3Condition) {
+		if (countLevel2Complete < permanentData.unlockLevel3Condition) {
 			buttonKindergarten.GetComponent<Button> ().enabled = false;
 		} else {
 			KindergartenLock.SetActive (false);

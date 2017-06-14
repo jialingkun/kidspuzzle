@@ -2,27 +2,12 @@
 using System.Collections;
 using admob;
 
-public class ads : MonoBehaviour {
+public class Ads : MonoBehaviour {
 	Admob ad;
+	private int interstitialCounter;
 	void Start () {
-		Debug.Log("start unity demo-------------");
 		initAdmob();
-		Admob.Instance().showBannerRelative(AdSize.SmartBanner, AdPosition.BOTTOM_CENTER, 0);
-	}
-
-
-	void Update(){
-		if (Input.GetKeyDown(KeyCode.Escape)) {
-			if (ad.isInterstitialReady())
-			{
-				ad.showInterstitial();
-				ad.loadInterstitial();
-			}
-			else
-			{
-				ad.loadInterstitial();
-			}
-		}
+		interstitialCounter = 0;
 	}
 
 	void initAdmob()
@@ -32,17 +17,49 @@ public class ads : MonoBehaviour {
 		ad.initAdmob("ca-app-pub-3940256099942544/2934735716", "ca-app-pub-3940256099942544/4411468910");
 		string[] keywords = { "animal","puzzle","children game"};
 		ad.setKeywords(keywords);
-		Debug.Log("admob inited -------------");
 
 	}
 
 	void onInterstitialEvent(string eventName, string msg)
 	{
-		Debug.Log("handler onAdmobEvent---" + eventName + "   " + msg);
 		if (eventName == AdmobEvent.onAdLoaded)
 		{
 			Admob.Instance().showInterstitial();
 		}
+	}
+
+	public void showBannerBottom(){
+		Admob.Instance().removeBanner();
+		Admob.Instance().showBannerRelative(AdSize.SmartBanner, AdPosition.BOTTOM_CENTER, 0);
+	}
+
+	public void showBannerTop(){
+		Admob.Instance().removeBanner();
+		Admob.Instance().showBannerRelative(AdSize.SmartBanner, AdPosition.TOP_CENTER, 0);
+	}
+
+	public void showInterstitial(){
+		if (ad.isInterstitialReady())
+		{
+			ad.showInterstitial();
+			ad.loadInterstitial();
+		}
+		else
+		{
+			ad.loadInterstitial();
+		}
+	}
+
+	public int getInterstitialCounter(){
+		return interstitialCounter;
+	}
+
+	public void addInterstitialCounter(){
+		interstitialCounter++;
+	}
+
+	public void clearInterstitialCounter(){
+		interstitialCounter = 0;
 	}
 
 }

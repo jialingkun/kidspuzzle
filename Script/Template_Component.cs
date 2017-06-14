@@ -5,5 +5,4 @@ using System.Collections;
 public class Template_Component {
 	public Sprite fullPiece;
 	public Sprite[] piece;
-
 }

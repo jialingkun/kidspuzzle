@@ -28,11 +28,11 @@ public class Piece_Properties : MonoBehaviour {
 		globalScript = GameObject.Find ("Canvas").GetComponent<Global_Variable> ();
 		string level = globalScript.getDifficulty ();
 		if (Equals (level, "ts")) {
-			scale = new Vector2 (0.45f, 0.45f);
+			scale = new Vector2 (0.40f, 0.40f);
 		} else if (Equals (level, "ps")) {
-			scale = new Vector2 (0.50f, 0.50f);
+			scale = new Vector2 (0.45f, 0.45f);
 		} else if (Equals (level, "ks")) {
-			scale = new Vector2 (0.60f, 0.60f);
+			scale = new Vector2 (0.55f, 0.55f);
 		}
 		bigDimension = this.GetComponent<RectTransform> ().sizeDelta;
 		smallDimension = Vector2.Scale(bigDimension,scale);
