@@ -106,7 +106,7 @@ public class Piece_Properties : MonoBehaviour {
 			float distance = Vector2.Distance (this.GetComponent<RectTransform> ().localPosition, placeHolderPosition);
 			if (distance < 50) {
 				this.GetComponent<RectTransform> ().localPosition = placeHolderPosition;
-				audioSource.PlayOneShot (permanentData.dropSound, 0.7f);
+				audioSource.PlayOneShot (permanentData.dropSound, 0.6f);
 				isCompleted = true;
 				globalScript.addPieceCompleted ();
 				isDrag = false;

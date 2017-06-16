@@ -13,10 +13,9 @@ public class Ads : MonoBehaviour {
 	void initAdmob()
 	{
 		ad = Admob.Instance();
+		ad.setForChildren (true); //ads for children
 		ad.interstitialEventHandler += onInterstitialEvent;
 		ad.initAdmob("ca-app-pub-3940256099942544/2934735716", "ca-app-pub-3940256099942544/4411468910");
-		string[] keywords = { "animal","puzzle","children game"};
-		ad.setKeywords(keywords);
 
 	}
 

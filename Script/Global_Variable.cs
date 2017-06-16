@@ -319,14 +319,14 @@ public class Global_Variable : MonoBehaviour {
 
 	public void playSound(){
 		if (audioSource.isPlaying==false) {
-			audioSource.PlayOneShot (selectedStages[stageNum].Sound);
+			audioSource.PlayOneShot (selectedStages[stageNum].Sound,2.6f);
 		}
 	}
 
 	IEnumerator waitWinSound(){
-		audioSource.PlayOneShot (winSound);
+		audioSource.PlayOneShot (winSound, 0.6f);
 		yield return new WaitForSeconds(winSound.length);
-		audioSource.PlayOneShot (selectedStages[stageNum].Sound,3f);
+		audioSource.PlayOneShot (selectedStages[stageNum].Sound,2.6f);
 		yield return new WaitForSeconds(selectedStages[stageNum].Sound.length);
 		nextButton.SetActive (true);
 
