@@ -3,7 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Game_Data : MonoBehaviour {
-
+	public AudioClip BGM;
+	public AudioClip selectSound;
+	public AudioClip dropSound;
 	public AudioClip winSound;
 	public AudioClip unlockSound;
 
@@ -40,6 +42,8 @@ public class Game_Data : MonoBehaviour {
 	public int unlockLevel3Condition;
 	public int interstitialCondition;
 
+	private bool BGMisPlayed;
+
 
 	void Awake() {
 		GameObject.DontDestroyOnLoad (gameObject); 
@@ -54,5 +58,14 @@ public class Game_Data : MonoBehaviour {
 		PlayerPrefs.SetString ("selectedStage", "");
 		PlayerPrefs.SetString ("lastLevel", "");
 		SaveLoad.Store (gameObject);
+		BGMisPlayed = false;
+	}
+
+	public void BGMPlayed(){
+		BGMisPlayed = true;
+	}
+
+	public bool getBGMStatus(){
+		return BGMisPlayed;
 	}
 }

@@ -33,6 +33,10 @@ public static class SaveLoad {
 		return permanentObject.GetComponent<Game_Data> ();
 	}
 
+	public static AudioSource getPermanentAudio(){
+		return permanentObject.GetComponent<AudioSource> ();
+	}
+
 	public static bool getNotificationLevel2Status(){
 		return notificationUnlockLevel2;
 	}

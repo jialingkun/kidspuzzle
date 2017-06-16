@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Stage : MonoBehaviour {
-	
-
 	private Select_Stage_Component[] ToodlerStageButton;
 	private Select_Stage_Component[] PreschoolStageButton;
 	private Select_Stage_Component[] KindergartenStageButton;
@@ -21,15 +20,18 @@ public class Stage : MonoBehaviour {
 	private GameObject PreschoolLock;
 	private GameObject KindergartenLock;
 
+	private AudioSource audioSource;
+
 	private bool levelSelect;
 
 	private int countLevel1Complete;
 	private int countLevel2Complete;
 
+	private Game_Data permanentData;
+
 
 	// Use this for initialization
 	void Start () {
-
 		levelSelect = true;
 
 		countLevel1Complete = 0;
@@ -40,9 +42,14 @@ public class Stage : MonoBehaviour {
 
 
 		//get permanent data
-		Game_Data permanentData = SaveLoad.getPermanentData ();
+		permanentData = SaveLoad.getPermanentData ();
 
-
+		audioSource = SaveLoad.getPermanentAudio ();
+		if (permanentData.getBGMStatus() == false) {
+			audioSource.clip = permanentData.BGM;
+			audioSource.Play ();
+			permanentData.BGMPlayed ();
+		}
 
 		//get stage button permanent variable
 		ToodlerStageButton = permanentData.ToodlerStageButton;
@@ -175,6 +182,7 @@ public class Stage : MonoBehaviour {
 	}
 
 	public void clickToodler(){
+		audioSource.PlayOneShot (permanentData.selectSound);
 		levelSelect = false;
 		levelButton.SetActive (false);
 		stageToodler.SetActive (true);
@@ -185,6 +193,7 @@ public class Stage : MonoBehaviour {
 	}
 
 	public void clickPreschool(){
+		audioSource.PlayOneShot (permanentData.selectSound);
 		levelSelect = false;
 		levelButton.SetActive (false);
 		stagePreschool.SetActive (true);
@@ -195,6 +204,7 @@ public class Stage : MonoBehaviour {
 	}
 
 	public void clickKindergarten(){
+		audioSource.PlayOneShot (permanentData.selectSound);
 		levelSelect = false;
 		levelButton.SetActive (false);
 		stageKindergarten.SetActive (true);
@@ -205,6 +215,7 @@ public class Stage : MonoBehaviour {
 	}
 
 	public void clickBack(){
+		audioSource.PlayOneShot (permanentData.selectSound);
 		levelSelect = true;
 		stageToodler.SetActive (false);
 		stagePreschool.SetActive (false);
@@ -214,6 +225,7 @@ public class Stage : MonoBehaviour {
 	}
 
 	public void clickStage(string stageID){
+		audioSource.PlayOneShot (permanentData.selectSound);
 		PlayerPrefs.SetString ("selectedStage", stageID);
 		SceneManager.LoadScene (2);
 	}

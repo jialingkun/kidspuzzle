@@ -302,11 +302,17 @@ public class Global_Variable : MonoBehaviour {
 		return reachTarget;
 	}
 
+	public AudioSource getAudioSource(){
+		return audioSource;
+	
+	}
+
 	public void addPieceCompleted(){
 		pieceCompleted++;
 	}
 
 	public void clickHome(){
+		audioSource.PlayOneShot (permanentData.selectSound);
 		PlayerPrefs.SetString ("lastLevel", level);
 		SceneManager.LoadScene (1);
 	}
@@ -320,7 +326,7 @@ public class Global_Variable : MonoBehaviour {
 	IEnumerator waitWinSound(){
 		audioSource.PlayOneShot (winSound);
 		yield return new WaitForSeconds(winSound.length);
-		audioSource.PlayOneShot (selectedStages[stageNum].Sound);
+		audioSource.PlayOneShot (selectedStages[stageNum].Sound,3f);
 		yield return new WaitForSeconds(selectedStages[stageNum].Sound.length);
 		nextButton.SetActive (true);
 

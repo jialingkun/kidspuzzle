@@ -21,11 +21,20 @@ public class Piece_Properties : MonoBehaviour {
 
 	private bool isDrag;
 	private bool isCompleted;
+	private AudioSource audioSource;
+
+	private Game_Data permanentData;
 
 	void Start () {
+
+		//get permanent data
+		permanentData = SaveLoad.getPermanentData ();
+
 		isCompleted = false;
 		image = this.transform.Find ("Image").GetComponent<RectTransform> ();
 		globalScript = GameObject.Find ("Canvas").GetComponent<Global_Variable> ();
+		audioSource = globalScript.getAudioSource ();
+
 		string level = globalScript.getDifficulty ();
 		if (Equals (level, "ts")) {
 			scale = new Vector2 (0.40f, 0.40f);
@@ -97,6 +106,7 @@ public class Piece_Properties : MonoBehaviour {
 			float distance = Vector2.Distance (this.GetComponent<RectTransform> ().localPosition, placeHolderPosition);
 			if (distance < 50) {
 				this.GetComponent<RectTransform> ().localPosition = placeHolderPosition;
+				audioSource.PlayOneShot (permanentData.dropSound, 0.7f);
 				isCompleted = true;
 				globalScript.addPieceCompleted ();
 				isDrag = false;
