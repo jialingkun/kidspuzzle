@@ -10,6 +10,7 @@ public class Stage : MonoBehaviour {
 	private Select_Stage_Component[] KindergartenStageButton;
 
 	private GameObject levelButton;
+	private GameObject muteButton;
 	private GameObject backButton;
 	private GameObject stageToodler;
 	private GameObject stagePreschool;
@@ -20,6 +21,7 @@ public class Stage : MonoBehaviour {
 	private GameObject PreschoolLock;
 	private GameObject KindergartenLock;
 
+	private AudioSource BGMaudioSource;
 	private AudioSource audioSource;
 
 	private bool levelSelect;
@@ -40,16 +42,11 @@ public class Stage : MonoBehaviour {
 		//show banner ads
 		SaveLoad.getAdsComponent ().showBannerBottom ();
 
-
 		//get permanent data
 		permanentData = SaveLoad.getPermanentData ();
 
-		audioSource = SaveLoad.getPermanentAudio ();
-		if (permanentData.getBGMStatus() == false) {
-			audioSource.clip = permanentData.BGM;
-			audioSource.Play ();
-			permanentData.BGMPlayed ();
-		}
+		//get local audio source
+		audioSource = permanentData.getSEaudioSource();
 
 		//get stage button permanent variable
 		ToodlerStageButton = permanentData.ToodlerStageButton;
@@ -58,6 +55,7 @@ public class Stage : MonoBehaviour {
 
 		//find gameobject
 		levelButton = GameObject.Find ("Level");
+		muteButton = GameObject.Find ("Mute");
 		backButton = GameObject.Find ("Back");
 		stageToodler = GameObject.Find ("StageToodler");
 		stagePreschool = GameObject.Find ("StagePreschool");
@@ -81,9 +79,29 @@ public class Stage : MonoBehaviour {
 		PreschoolLock.GetComponent<Image> ().sprite = permanentData.lockImageLevel2;
 		KindergartenLock.GetComponent<Image> ().sprite = permanentData.lockImageLevel3;
 
-
 		//load database
 		SaveLoad.Load ();
+
+		//mute sprite
+		if (SaveLoad.getMuteState () == true) {
+			muteButton.GetComponent<Image> ().sprite = permanentData.muteOnImage;
+		} else {
+			muteButton.GetComponent<Image> ().sprite = permanentData.muteOffImage;
+		}
+
+		//Main menu play state
+		BGMaudioSource = SaveLoad.getPermanentAudio ();
+		if (permanentData.getBGMStatus() == false) {
+			BGMaudioSource.clip = permanentData.BGM;
+			permanentData.BGMPlayed ();
+
+			//play depend on mute state
+			if (SaveLoad.getMuteState () == false) {
+				BGMaudioSource.Play ();
+			}
+		}
+
+
 
 		//count level complete
 		foreach (StageData data in SaveLoad.savedLevel1) {
@@ -222,6 +240,17 @@ public class Stage : MonoBehaviour {
 		stageKindergarten.SetActive (false);
 		backButton.SetActive (false);
 		levelButton.SetActive (true);
+	}
+
+	public void clickMute(){
+		bool muteState = SaveLoad.changeMuteState();
+		if (muteState == true) {
+			BGMaudioSource.Stop ();
+			muteButton.GetComponent<Image> ().sprite = permanentData.muteOnImage;
+		} else {
+			BGMaudioSource.Play ();
+			muteButton.GetComponent<Image> ().sprite = permanentData.muteOffImage;
+		}
 	}
 
 	public void clickStage(string stageID){

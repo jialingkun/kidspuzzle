@@ -12,6 +12,7 @@ public static class SaveLoad {
 	public static GameObject permanentObject;
 	public static bool notificationUnlockLevel2;
 	public static bool notificationUnlockLevel3;
+	public static bool muteState;
 
 	//it's static so we can call it from anywhere
 	public static void Store(GameObject dataObject){
@@ -21,6 +22,7 @@ public static class SaveLoad {
 		permanentObject = dataObject;
 		notificationUnlockLevel2 = false;
 		notificationUnlockLevel3 = false;
+		muteState = false;
 	}
 
 	public static void Clear(){
@@ -47,8 +49,6 @@ public static class SaveLoad {
 		FileStream file = File.Create (Application.persistentDataPath + "/notificationLevel2.gd"); //you can call it anything you want
 		bf.Serialize(file, notificationUnlockLevel2);
 		file.Close();
-
-
 	}
 
 	public static bool getNotificationLevel3Status(){
@@ -61,6 +61,23 @@ public static class SaveLoad {
 		FileStream file = File.Create (Application.persistentDataPath + "/notificationLevel3.gd"); //you can call it anything you want
 		bf.Serialize(file, notificationUnlockLevel3);
 		file.Close();
+	}
+
+	public static bool changeMuteState(){
+		if (muteState == true) {
+			muteState = false;
+		} else {
+			muteState = true;
+		}
+		BinaryFormatter bf = new BinaryFormatter();
+		FileStream file = File.Create (Application.persistentDataPath + "/muteState.gd");
+		bf.Serialize(file, muteState);
+		file.Close();
+		return muteState;
+	}
+
+	public static bool getMuteState(){
+		return muteState;
 	}
 
 	public static Ads getAdsComponent(){
@@ -145,6 +162,11 @@ public static class SaveLoad {
 		if(File.Exists(Application.persistentDataPath + "/notificationLevel3.gd")) {
 			file = File.Open(Application.persistentDataPath + "/notificationLevel3.gd", FileMode.Open);
 			notificationUnlockLevel3 = (bool)bf.Deserialize(file);
+			file.Close();
+		}
+		if(File.Exists(Application.persistentDataPath + "/muteState.gd")) {
+			file = File.Open(Application.persistentDataPath + "/muteState.gd", FileMode.Open);
+			muteState = (bool)bf.Deserialize(file);
 			file.Close();
 		}
 	}

@@ -13,6 +13,8 @@ public class Game_Data : MonoBehaviour {
 	public Sprite backgroundImage;
 	public Sprite titleImage;
 	public Sprite backImage;
+	public Sprite muteOnImage;
+	public Sprite muteOffImage;
 	public Sprite nextImage;
 	public Sprite closeImage;
 	public Sprite UnlockImage;
@@ -43,6 +45,7 @@ public class Game_Data : MonoBehaviour {
 	public int interstitialCondition;
 
 	private bool BGMisPlayed;
+	private AudioSource SEaudioSource;
 
 
 	void Awake() {
@@ -54,6 +57,7 @@ public class Game_Data : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		SEaudioSource = this.gameObject.AddComponent<AudioSource> ();
 		GameObject.Find ("splash").GetComponent<Image> ().sprite = splashImage;
 		PlayerPrefs.SetString ("selectedStage", "");
 		PlayerPrefs.SetString ("lastLevel", "");
@@ -67,5 +71,9 @@ public class Game_Data : MonoBehaviour {
 
 	public bool getBGMStatus(){
 		return BGMisPlayed;
+	}
+
+	public AudioSource getSEaudioSource(){
+		return SEaudioSource;
 	}
 }

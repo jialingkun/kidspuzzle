@@ -95,7 +95,7 @@ public class Global_Variable : MonoBehaviour {
 		soundTrigger.SetActive (false);
 
 		//audio
-		audioSource = this.GetComponent<AudioSource> ();
+		audioSource = permanentData.getSEaudioSource();
 
 		//initialize
 		pieceCompleted = 0;
@@ -355,6 +355,7 @@ public class Global_Variable : MonoBehaviour {
 	}
 
 	public void clickNext(){
+		audioSource.PlayOneShot (permanentData.selectSound,1f);
 		int stageCount = selectedStages.Length;
 		if (stageNum >= stageCount - 1) {
 			
