@@ -174,17 +174,13 @@ public class Stage : MonoBehaviour {
 		backButton.SetActive (false);
 
 
-
-
-
-
 		//back to stage select from gameplay
 		if (Equals (PlayerPrefs.GetString ("lastLevel"), "ts")) {
-			clickToodler ();
+			backToodler ();
 		} else if (Equals (PlayerPrefs.GetString ("lastLevel"), "ps")) {
-			clickPreschool ();
+			backPreschool ();
 		} else if (Equals (PlayerPrefs.GetString ("lastLevel"), "ks")) {
-			clickKindergarten ();
+			backKindergarten ();
 		}
 
 	}
@@ -223,6 +219,36 @@ public class Stage : MonoBehaviour {
 
 	public void clickKindergarten(){
 		audioSource.PlayOneShot (permanentData.selectSound);
+		levelSelect = false;
+		levelButton.SetActive (false);
+		stageKindergarten.SetActive (true);
+		backButton.SetActive (true);
+		RectTransform contentTransform;
+		contentTransform = stageKindergarten.transform.Find ("Viewport").transform.Find ("Content").gameObject.GetComponent<RectTransform>();
+		contentTransform.localPosition = new Vector2 (0, contentTransform.localPosition.y);
+	}
+
+	public void backToodler(){
+		levelSelect = false;
+		levelButton.SetActive (false);
+		stageToodler.SetActive (true);
+		backButton.SetActive (true);
+		RectTransform contentTransform;
+		contentTransform = stageToodler.transform.Find ("Viewport").transform.Find ("Content").gameObject.GetComponent<RectTransform>();
+		contentTransform.localPosition = new Vector2 (0, contentTransform.localPosition.y);
+	}
+
+	public void backPreschool(){
+		levelSelect = false;
+		levelButton.SetActive (false);
+		stagePreschool.SetActive (true);
+		backButton.SetActive (true);
+		RectTransform contentTransform;
+		contentTransform = stagePreschool.transform.Find ("Viewport").transform.Find ("Content").gameObject.GetComponent<RectTransform>();
+		contentTransform.localPosition = new Vector2 (0, contentTransform.localPosition.y);
+	}
+
+	public void backKindergarten(){
 		levelSelect = false;
 		levelButton.SetActive (false);
 		stageKindergarten.SetActive (true);
