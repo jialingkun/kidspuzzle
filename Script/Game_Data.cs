@@ -8,6 +8,7 @@ public class Game_Data : MonoBehaviour {
 	public AudioClip dropSound;
 	public AudioClip winSound;
 	public AudioClip unlockSound;
+	public AudioClip blastSound;
 
 	public Sprite splashImage;
 	public Sprite backgroundImage;
@@ -26,6 +27,9 @@ public class Game_Data : MonoBehaviour {
 	public Sprite level1Label;
 	public Sprite level2Label;
 	public Sprite level3Label;
+
+	public Sprite[] balloonImage;
+	public Sprite[] blastImage;
 
 
 	public Select_Stage_Component[] ToodlerStageButton;

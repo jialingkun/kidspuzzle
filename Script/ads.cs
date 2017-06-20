@@ -15,7 +15,7 @@ public class Ads : MonoBehaviour {
 		ad = Admob.Instance();
 		ad.setForChildren (true); //ads for children
 		ad.interstitialEventHandler += onInterstitialEvent;
-		ad.initAdmob("ca-app-pub-3940256099942544/2934735716", "ca-app-pub-3940256099942544/4411468910");
+		ad.initAdmob("ca-app-pub-8998944047411782/7716290158", "ca-app-pub-8998944047411782/9193023356"); //(banner, interstitial)
 
 	}
 

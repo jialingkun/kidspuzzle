@@ -35,6 +35,7 @@ public class Global_Variable : MonoBehaviour {
 	private GameObject soundTrigger;
 	private GameObject unlockNotification;
 	private GameObject unlockMessage;
+	private GameObject balloonBackground;
 	private List<GameObject> templates;
 	private GameObject[] pieceObject;
 	private RectTransform[] piecePos;
@@ -45,6 +46,8 @@ public class Global_Variable : MonoBehaviour {
 	private int pieceCompleted;
 	private int countLevel1Complete;
 	private int countLevel2Complete;
+	private int numberOfBalloon;
+	private int countBalloon;
 	private bool[] pieceArrived;
 	private bool waiting;
 	private bool reachTarget;
@@ -52,8 +55,6 @@ public class Global_Variable : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-
 
 		//get permanent data
 		permanentData = SaveLoad.getPermanentData ();
@@ -81,6 +82,10 @@ public class Global_Variable : MonoBehaviour {
 		GameObject.Find ("unlockNotification").GetComponent<Image> ().sprite = permanentData.UnlockImage;
 		GameObject.Find ("close").GetComponent<Image> ().sprite = permanentData.closeImage;
 
+		//ballon background
+		balloonBackground = GameObject.Find ("balloonBackground");
+		balloonBackground.SetActive (false);
+
 		//next button
 		nextButton = GameObject.Find ("next");
 		nextButton.SetActive (false);
@@ -103,6 +108,10 @@ public class Global_Variable : MonoBehaviour {
 		reachTarget = false;
 		isWin = false;
 		countArrived = 0;
+
+		//Number of balloons
+		numberOfBalloon = 15;
+		countBalloon = numberOfBalloon;
 
 		//get data from main menu
 		stageID = PlayerPrefs.GetString ("selectedStage");
@@ -278,8 +287,18 @@ public class Global_Variable : MonoBehaviour {
 
 				nameImage.SetActive (true);
 				soundTrigger.SetActive (true);
-				StartCoroutine (waitWinSound ());
+
+				//win sound
+				audioSource.PlayOneShot (winSound, 0.6f);
+
+				//balloon
+				balloonBackground.SetActive(true);
+				foreach (GameObject balloon in GameObject.FindGameObjectsWithTag("balloon")) {
+					balloon.GetComponent<Balloon> ().moveUp ();
+				}
+
 				isWin = true;
+
 			}
 		}
 
@@ -324,8 +343,6 @@ public class Global_Variable : MonoBehaviour {
 	}
 
 	IEnumerator waitWinSound(){
-		audioSource.PlayOneShot (winSound, 0.6f);
-		yield return new WaitForSeconds(winSound.length);
 		audioSource.PlayOneShot (selectedStages[stageNum].Sound,2.6f);
 		yield return new WaitForSeconds(selectedStages[stageNum].Sound.length);
 		nextButton.SetActive (true);
@@ -394,6 +411,16 @@ public class Global_Variable : MonoBehaviour {
 
 	public void clickCloseNotification(){
 		unlockNotification.SetActive (false);
+	}
+
+	public void balloonBlast(){
+		countBalloon--;
+		if (countBalloon<=0) {
+			countBalloon = numberOfBalloon;
+			balloonBackground.SetActive (false);
+			StartCoroutine (waitWinSound ());
+		}
+	
 	}
 
 	public void refresh(){
