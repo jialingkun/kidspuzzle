@@ -39,8 +39,8 @@ public class Balloon : MonoBehaviour {
 		initialPosition = this.transform.position;
 		isMoving = false;
 		clicked = false;
-		minSpeed = 0.3f;
-		maxSpeed = 0.6f;
+		minSpeed = 0.4f;
+		maxSpeed = 0.7f;
 		yAxisLimit = GameObject.Find("heightLimit").transform.position.y;
 		moveSpeed = 1f;
 
@@ -81,7 +81,7 @@ public class Balloon : MonoBehaviour {
 
 	IEnumerator balloonDestroyed(){
 		imageComponent.sprite = selectedBlastSprite;
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(0.35f);
 		this.transform.position = initialPosition;
 		globalScript.balloonBlast ();
 		refresh ();
