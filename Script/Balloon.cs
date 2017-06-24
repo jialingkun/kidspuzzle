@@ -39,8 +39,8 @@ public class Balloon : MonoBehaviour {
 		initialPosition = this.transform.position;
 		isMoving = false;
 		clicked = false;
-		minSpeed = 0.4f;
-		maxSpeed = 0.7f;
+		minSpeed = 0.5f;
+		maxSpeed = 0.8f;
 		yAxisLimit = GameObject.Find("heightLimit").transform.position.y;
 		moveSpeed = 1f;
 

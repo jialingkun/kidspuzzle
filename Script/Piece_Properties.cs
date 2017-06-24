@@ -9,14 +9,14 @@ public class Piece_Properties : MonoBehaviour {
 	public resizePatternX xPositionPattern;
 	public resizePatternY yPositionPattern;
 
-	public Vector2 smallDimension;
-	public Vector2 bigDimension;
-	public Vector2 placeHolderPosition;
-	public RectTransform image;
-	public Vector2 smallImagePosition;
-	public Vector2 smallImageDimension;
-	public Vector2 bigImagePosition;
-	public Vector2 bigImageDimension;
+	private Vector2 smallDimension;
+	private Vector2 bigDimension;
+	private Vector2 placeHolderPosition;
+	private RectTransform image;
+	private Vector2 smallImagePosition;
+	private Vector2 smallImageDimension;
+	private Vector2 bigImagePosition;
+	private Vector2 bigImageDimension;
 	private Vector2 scale;
 
 	private bool isDrag;
