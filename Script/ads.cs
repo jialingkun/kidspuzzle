@@ -13,7 +13,7 @@ public class Ads : MonoBehaviour {
 	private int interstitialCounter;
 	void Start () {
 		bannerID = "ca-app-pub-8998944047411782/7716290158";
-		interstitialID = "ca-app-pub-8998944047411782/9193023356";;
+		interstitialID = "ca-app-pub-8998944047411782/9193023356";
 		bannerAdRequest = new AdRequest.Builder().Build();
 		interstitialCounter = 0;
 		RequestInterstitial ();
